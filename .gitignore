@@ -1,0 +1,37 @@
+# Dependencies
+node_modules/
+backend/venv/
+
+# Environment and secrets
+backend/.env
+.env
+.env.*
+
+# Database and backups
+backend/autoparts.db
+backend/autoparts.db-*
+backend/backups/
+backend/dist/autoparts.db
+
+# Logs and test output
+backend/pos_app.log
+backend/pos_app.log.*
+backend/test_results.json
+test_results.json
+
+# Build artifacts
+backend/build/
+backend/dist/
+dist/
+
+# Python
+__pycache__/
+*.py[cod]
+*.spec.bak
+
+# OS / editor
+.DS_Store
+Thumbs.db
+*.swp
+.idea/
+.vscode/

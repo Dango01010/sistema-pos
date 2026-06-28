@@ -1,0 +1,208 @@
+2d1
+< import { useNavigate } from 'react-router-dom';
+16a16
+> import { useLocation, useNavigate } from 'react-router-dom';
+23c23
+< function AdminPOS() {
+---
+> function VendedorDashboard() {
+24a25
+>     const location = useLocation();
+50c51
+<     const [isReturnOpen, setIsReturnOpen] = useState(false);
+---
+>     const [isReturnOpen, setIsReturnOpen] = useState(location.pathname === '/vendedor/returns');
+53a55,57
+>     const [returnReason, setReturnReason] = useState('Garantía');
+>     const [returnDescription, setReturnDescription] = useState('');
+>     const [returnImages, setReturnImages] = useState([]);
+167c171
+<     }, [toast]);
+---
+>     }, []);
+206c210
+<     }, [products, addToCart, toast]);;
+---
+>     }, [products, addToCart]);
+218c222
+<         
+---
+> 
+250a255,257
+>                 setReturnReason('Garantía');
+>                 setReturnDescription('');
+>                 setReturnImages([]);
+258a266,283
+>     const handleImageUpload = (e) => {
+>         const files = Array.from(e.target.files);
+>         const promises = files.map(file => {
+>             return new Promise((resolve, reject) => {
+>                 const reader = new FileReader();
+>                 reader.readAsDataURL(file);
+>                 reader.onload = () => resolve(reader.result);
+>                 reader.onerror = error => reject(error);
+>             });
+>         });
+>         Promise.all(promises).then(base64Files => {
+>             setReturnImages(prev => [...prev, ...base64Files]);
+>         }).catch(err => {
+>             console.error("Error reading files:", err);
+>             toast({ title: "Error al cargar imágenes", variant: "destructive" });
+>         });
+>     };
+> 
+281c306,308
+<                     reason: 'Devolución cliente',
+---
+>                     reason: returnReason,
+>                     description: returnDescription,
+>                     evidence_images: returnImages,
+292a320,322
+>                 setReturnReason('Garantía');
+>                 setReturnDescription('');
+>                 setReturnImages([]);
+300,302c330,331
+<         setCart(prevCart => {
+<             const item = prevCart.find(i => i.id === productId);
+<             const product = products.find(p => p.id === productId); // products is mostly static during this operation
+---
+>         const item = cart.find(i => i.id === productId);
+>         const product = products.find(p => p.id === productId);
+304c333
+<             if (!product || !item) return prevCart;
+---
+>         if (!product || !item) return;
+306,309c335,338
+<             if (item.quantity + change > product.stock) {
+<                 toast({ title: "Stock límite alcanzado", variant: "destructive" });
+<                 return prevCart;
+<             }
+---
+>         if (item.quantity + change > product.stock) {
+>             toast({ title: "Stock límite alcanzado", variant: "destructive" });
+>             return;
+>         }
+311,313c340,343
+<             if (item.quantity + change <= 0) {
+<                 return prevCart.filter(i => i.id !== productId);
+<             }
+---
+>         if (item.quantity + change <= 0) {
+>             setCart(cart.filter(i => i.id !== productId));
+>             return;
+>         }
+315,318c345,347
+<             return prevCart.map(i =>
+<                 i.id === productId ? { ...i, quantity: i.quantity + change } : i
+<             );
+<         });
+---
+>         setCart(cart.map(i =>
+>             i.id === productId ? { ...i, quantity: i.quantity + change } : i
+>         ));
+341a371,386
+>     // Routing sync effects
+>     useEffect(() => {
+>         if (location.pathname === '/vendedor/returns') {
+>             setIsReturnOpen(true);
+>         } else if (location.pathname === '/vendedor/scan') {
+>             handleScanHelper();
+>             navigate('/vendedor');
+>         }
+>     }, [location.pathname]);
+> 
+>     useEffect(() => {
+>         if (!isReturnOpen && location.pathname === '/vendedor/returns') {
+>             navigate('/vendedor');
+>         }
+>     }, [isReturnOpen, location.pathname, navigate]);
+> 
+390c435
+<             // We know it's ok now
+---
+>             // Venta Ok
+435c480
+<                 <title>POS Admin - Multirepuestos Ramos</title>
+---
+>                 <title>POS Vendedor - Multirepuestos Ramos</title>
+437c482
+<             <DashboardLayout role="admin">
+---
+>             <DashboardLayout role="vendedor">
+517c562
+<                         <div className="flex-1 overflow-y-auto pr-2 pb-24 scroll-smooth">
+---
+>                         <div className="flex-1 overflow-y-auto pr-3 pb-4 scroll-smooth">
+520c565
+<                                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 p-1">
+---
+>                                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4 p-1">
+548c593
+<                     {/* Right Column: Cart */}
+---
+>                     {/* Right Column: Cart - Same as AdminPOS */}
+550d594
+<                         {/* Customer Selector */}
+570d613
+<                         {/* Client Modal */}
+629c672
+<                                                 <Button onClick={handleCreateClient} disabled={!newClient.name.trim() || !newClient.ci_nit.trim()}>Guardar Cliente</Button>
+---
+>                                                 <Button onClick={handleCreateClient}>Guardar Cliente</Button>
+637d679
+<                         {/* Cart Items */}
+693d734
+<                         {/* Footer / Totals */}
+695d735
+<                             {/* Discount Input */}
+754d793
+<                 {/* Sales History Modal */}
+792d830
+<                 {/* Returns Modal */}
+802,803c840,875
+<                                 <div className="p-3 bg-white/5 rounded">
+<                                     <p>Venta #{returnSaleData.id} - Total: Bs {returnSaleData.total}</p>
+---
+>                                 <div className="p-3 bg-white/5 rounded space-y-2">
+>                                     <p className="font-bold">Venta #{returnSaleData.id} - Total: Bs {returnSaleData.total}</p>
+>                                     <p className="text-sm text-slate-300">
+>                                         Cliente: {returnSaleData.client_name || 'Consumidor Final'} {returnSaleData.client_ci ? `(${returnSaleData.client_ci})` : ''}
+>                                     </p>
+>                                 </div>
+>                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+>                                     <div className="space-y-2">
+>                                         <Label>Motivo de Devolución</Label>
+>                                         <select 
+>                                             className="w-full bg-slate-800 border border-slate-700 rounded-md p-2"
+>                                             value={returnReason}
+>                                             onChange={e => setReturnReason(e.target.value)}
+>                                         >
+>                                             <option value="Garantía">Garantía</option>
+>                                             <option value="Defecto de fábrica">Defecto de fábrica</option>
+>                                             <option value="Error de cliente">Error de cliente</option>
+>                                             <option value="Producto dañado en tienda">Producto dañado en tienda</option>
+>                                         </select>
+>                                     </div>
+>                                     <div className="space-y-2">
+>                                         <Label>Evidencia Fotográfica (Opcional)</Label>
+>                                         <Input type="file" accept="image/*" multiple onChange={handleImageUpload} className="bg-slate-800 border-slate-700" />
+>                                         {returnImages.length > 0 && (
+>                                             <p className="text-xs text-slate-400">{returnImages.length} imagen(es) seleccionada(s)</p>
+>                                         )}
+>                                     </div>
+>                                     <div className="space-y-2 md:col-span-2">
+>                                         <Label>Descripción del Problema</Label>
+>                                         <textarea 
+>                                             className="w-full bg-slate-800 border border-slate-700 rounded-md p-2 min-h-[80px]"
+>                                             placeholder="Detalla el motivo de la devolución..."
+>                                             value={returnDescription}
+>                                             onChange={e => setReturnDescription(e.target.value)}
+>                                         />
+>                                     </div>
+917d988
+< 
+923c994
+< export default AdminPOS;
+---
+> export default VendedorDashboard;
+\ No newline at end of file

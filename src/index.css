@@ -1,0 +1,135 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+    :root {
+        --background: 224 71% 4%;
+        --foreground: 213 31% 91%;
+
+        --card: 224 71% 4%;
+        --card-foreground: 213 31% 91%;
+
+        --popover: 224 71% 4%;
+        --popover-foreground: 213 31% 91%;
+
+        --primary: 45 93% 47%;
+        --primary-foreground: 26 83.3% 14.1%;
+
+        --secondary: 217.2 32.6% 17.5%;
+        --secondary-foreground: 210 40% 98%;
+
+        --muted: 223 47% 11%;
+        --muted-foreground: 215.4 16.3% 56.9%;
+
+        --accent: 216 34% 17%;
+        --accent-foreground: 210 40% 98%;
+
+        --destructive: 0 63% 31%;
+        --destructive-foreground: 210 40% 98%;
+
+        --border: 216 34% 17%;
+        --input: 216 34% 17%;
+        --ring: 45 93% 47%;
+        --radius: 0.5rem;
+    }
+
+    .light {
+        --background: 0 0% 100%;
+        --foreground: 222.2 84% 4.9%;
+        --card: 0 0% 100%;
+        --card-foreground: 222.2 84% 4.9%;
+        --popover: 0 0% 100%;
+        --popover-foreground: 222.2 84% 4.9%;
+        --primary: 45 93% 47%;
+        --primary-foreground: 26 83.3% 14.1%;
+        --secondary: 210 40% 96.1%;
+        --secondary-foreground: 222.2 47.4% 11.2%;
+        --muted: 210 40% 96.1%;
+        --muted-foreground: 215.4 16.3% 35%;
+        --accent: 210 40% 96.1%;
+        --accent-foreground: 222.2 47.4% 11.2%;
+        --destructive: 0 84.2% 60.2%;
+        --destructive-foreground: 210 40% 98%;
+        --border: 214.3 31.8% 91.4%;
+        --input: 214.3 31.8% 91.4%;
+        --ring: 45 93% 47%;
+    }
+}
+
+body {
+    @apply bg-background text-foreground antialiased transition-colors duration-300;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+.glass-panel {
+    @apply bg-background/60 backdrop-blur-xl border border-border shadow-2xl;
+}
+
+.glass-card {
+    @apply bg-card/40 backdrop-blur-md border border-border hover:border-primary/50 transition-all duration-300 shadow-lg hover:shadow-primary/5;
+}
+
+.premium-gradient {
+    @apply bg-gradient-to-r from-blue-600 via-indigo-500 to-purple-500;
+}
+
+.premium-text-gradient {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-blue-700 via-indigo-600 to-purple-700 dark:from-blue-400 dark:via-indigo-300 dark:to-purple-400;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+    @apply bg-muted-foreground/30 rounded-full hover:bg-muted-foreground/50 transition-colors;
+}
+
+/* Barcode Simulation Class */
+.barcode-bars {
+    background-image: linear-gradient(90deg,
+            currentColor 0%, currentColor 2%, transparent 2%, transparent 4%,
+            currentColor 4%, currentColor 8%, transparent 8%, transparent 10%,
+            currentColor 10%, currentColor 12%, transparent 12%, transparent 16%,
+            currentColor 16%, currentColor 20%, transparent 20%, transparent 24%,
+            currentColor 24%, currentColor 26%, transparent 26%, transparent 30%,
+            currentColor 30%, currentColor 36%, transparent 36%, transparent 40%,
+            currentColor 40%, currentColor 44%, transparent 44%, transparent 48%,
+            currentColor 48%, currentColor 50%, transparent 50%, transparent 54%,
+            currentColor 54%, currentColor 60%, transparent 60%, transparent 64%,
+            currentColor 64%, currentColor 68%, transparent 68%, transparent 72%,
+            currentColor 72%, currentColor 76%, transparent 76%, transparent 80%,
+            currentColor 80%, currentColor 82%, transparent 82%, transparent 86%,
+            currentColor 86%, currentColor 90%, transparent 90%, transparent 94%,
+            currentColor 94%, currentColor 98%, transparent 98%, transparent 100%);
+    width: 100%;
+    height: 100%;
+}
+
+/* Print Overrides */
+@media print {
+    @page { 
+        margin: 0; /* Removes browser's default header/footer (URL, Title, Date) */
+    }
+    
+    body {
+        -webkit-print-color-adjust: exact; /* Ensures colors/backgrounds print properly */
+        print-color-adjust: exact;
+    }
+    
+    /* Hide Toast Notifications during print */
+    [role="region"],
+    .toast,
+    [data-radix-toast-announce-exclude],
+    [data-radix-toast-announce-region],
+    [data-radix-popper-content-wrapper] {
+        display: none !important;
+    }
+}

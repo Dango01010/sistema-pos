@@ -72,22 +72,24 @@ def bootstrap_admin():
     from werkzeug.security import generate_password_hash
     conn = get_db_connection()
     try:
-        count = conn.execute('SELECT COUNT(*) as c FROM users').fetchone()['c']
-        if count == 0:
-            conn.execute(
-                'INSERT INTO users (username, password, role, name) VALUES (?, ?, ?, ?)',
-                ('admin', generate_password_hash('admin123'), 'admin', 'Administrador Principal')
-            )
-            conn.commit()
+        cur = conn.cursor()
+        cur.execute("SELECT name FROM sqlite_master WHERE type='table' AND name='users'")
+        if cur.fetchone():
+            count = conn.execute('SELECT COUNT(*) as c FROM users').fetchone()['c']
+            if count == 0:
+                conn.execute(
+                    'INSERT INTO users (username, password, role, name) VALUES (?, ?, ?, ?)',
+                    ('admin', generate_password_hash('admin123'), 'admin', 'Administrador Principal')
+                )
+                conn.commit()
     finally:
         conn.close()
 
 def ensure_database():
     created = False
-    if not os.path.exists(DATABASE):
+    if not os.path.exists(DATABASE) or os.path.getsize(DATABASE) == 0:
         init_db()
         created = True
     run_migrations()
-    if created:
-        bootstrap_admin()
+    bootstrap_admin()
     return created

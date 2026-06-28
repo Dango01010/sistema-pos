@@ -7,6 +7,9 @@ on:
       - master
   workflow_dispatch: # Permite ejecutar el build manualmente desde la web de GitHub
 
+permissions:
+  contents: write
+
 jobs:
   build:
     runs-on: windows-latest # ¡La magia! GitHub nos presta un servidor Windows gratis
@@ -50,8 +53,15 @@ jobs:
           # y no sobreescribir datos si el usuario lo descarga como actualizacion.
           # Tampoco uploads ni backups porque se autogeneraran.
 
-      - name: Subir EXE Final como Artefacto (Descargable)
-        uses: actions/upload-artifact@v4
+      - name: Comprimir Carpeta (ZIP)
+        run: Compress-Archive -Path Sistema_POS_Final\* -DestinationPath Sistema_POS_Windows.zip
+
+      - name: Crear Release Publico (Descarga Libre)
+        uses: softprops/action-gh-release@v2
         with:
-          name: Sistema_POS_Windows
-          path: Sistema_POS_Final/
+          tag_name: latest
+          name: Última Versión del Sistema
+          files: Sistema_POS_Windows.zip
+          draft: false
+          prerelease: false
+          make_latest: true

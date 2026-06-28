@@ -453,7 +453,7 @@ function InventoryModule() {
                     />
                 )}
             </div>
-        </div>
+
 
         {/* Modal para Nueva Categoría */}
         <Dialog open={isCategoryModalOpen} onOpenChange={setIsCategoryModalOpen}>

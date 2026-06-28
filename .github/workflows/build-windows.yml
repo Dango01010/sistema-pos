@@ -13,10 +13,10 @@ jobs:
 
     steps:
       - name: Descargar codigo fuente
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Instalar Node.js (Para el Frontend)
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: '20' # Usa una versión estable de Node
 
@@ -51,7 +51,7 @@ jobs:
           # Tampoco uploads ni backups porque se autogeneraran.
 
       - name: Subir EXE Final como Artefacto (Descargable)
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: Sistema_POS_Windows
           path: Sistema_POS_Final/

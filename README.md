@@ -85,3 +85,4 @@ Este documento contiene la información crítica necesaria para operar, respalda
 
 ---
 *Fin de la guía operativa.*
+# sistema-pos

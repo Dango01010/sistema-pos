@@ -56,8 +56,10 @@ logger.setLevel(logging.INFO)
 handler = RotatingFileHandler('pos_app.log', maxBytes=5*1024*1024, backupCount=5)
 handler.setFormatter(StructuredFormatter())
 logger.addHandler(handler)
+console_handler = logging.StreamHandler()
+logger.addHandler(console_handler)
 
-app.logger.handlers = [handler]
+app.logger.handlers = [handler, console_handler]
 app.logger.setLevel(logging.INFO)
 app.logger.info("Application started")
 

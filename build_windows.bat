@@ -42,6 +42,6 @@ echo AHI DENTRO esta TODO lo que necesitas para ejecutar el programa
 echo en cualquier computadora.
 echo.
 echo Solo tienes que hacer doble clic en Sistema_POS.exe
-echo y abrir http://localhost:5000 en tu navegador.
+echo y abrir http://localhost:5001 en tu navegador.
 echo ========================================================
 pause

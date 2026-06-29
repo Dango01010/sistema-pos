@@ -131,7 +131,7 @@ const PaymentModal = ({ isOpen, onClose, total, currency, onConfirm, isProcessin
                         <p className="text-center text-sm text-slate-400">Escanea el código para pagar <strong>{currencySymbol}{total.toFixed(2)}</strong></p>
                     </div>
                 )}
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 mt-6">
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mt-6">
                     <Button variant="ghost" onClick={onClose} className="border border-slate-700 hover:bg-slate-800 text-slate-300">
                         Cancelar
                     </Button>

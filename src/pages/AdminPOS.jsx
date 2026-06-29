@@ -323,7 +323,10 @@ function AdminPOS() {
         try {
             const res = await fetch('/api/returns', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: { 
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+                },
                 body: JSON.stringify({
                     sale_id: returnSaleData.id || returnSaleData.sale?.id,
                     reason: returnReason,
@@ -715,15 +718,7 @@ function AdminPOS() {
                                     <DialogTitle>Detalles de la Cotización</DialogTitle>
                                 </DialogHeader>
                                 <div className="space-y-4 py-4">
-                                    <div className="space-y-2">
-                                        <Label>Procedencia (Opcional)</Label>
-                                        <Input 
-                                            placeholder="Ej: Importación directa" 
-                                            value={quoteDetails.origin} 
-                                            onChange={(e) => setQuoteDetails({...quoteDetails, origin: e.target.value})}
-                                            className="bg-background border-border text-foreground"
-                                        />
-                                    </div>
+                                    
                                     <div className="space-y-2">
                                         <Label>Fecha de entrega</Label>
                                         <Input 

@@ -21,6 +21,7 @@ function InventoryModule() {
         id: null,
         name: '',
         brand: '',
+        origin: '',
         code: '',
         category: '',
         stock: '',
@@ -76,6 +77,7 @@ function InventoryModule() {
             (product.name || '').toLowerCase().includes(searchLower) ||
             (product.code || '').toLowerCase().includes(searchLower) ||
             (product.brand || '').toLowerCase().includes(searchLower) ||
+            (product.origin || '').toLowerCase().includes(searchLower) ||
             (product.category || '').toLowerCase().includes(searchLower);
             
         let matchesStock = true;
@@ -133,7 +135,7 @@ function InventoryModule() {
 
     const handleOpenAdd = () => {
         setIsEditing(false);
-        setFormState({ id: null, name: '', brand: '', code: '', category: '', stock: '', price: '', min: '', image: null });
+        setFormState({ id: null, name: '', brand: '', origin: '', code: '', category: '', stock: '', price: '', min: '', image: null });
         setCategorySearch('');
         setIsDialogOpen(true);
     };
@@ -313,6 +315,15 @@ function InventoryModule() {
                                         placeholder="Ej. Toyota, Bosch..."
                                     />
                                 </div>
+                                <div className="space-y-2">
+                                    <Label>Procedencia (Opcional)</Label>
+                                    <Input
+                                        className="bg-slate-800 border-slate-700"
+                                        value={formState.origin}
+                                        onChange={(e) => setFormState({ ...formState, origin: e.target.value })}
+                                        placeholder="Ej. Japón, Brasil..."
+                                    />
+                                </div>
                             </div>
 
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -479,6 +490,7 @@ function InventoryModule() {
                                     </td>
                                     <td className="py-4 px-6 text-muted-foreground font-mono text-sm">{product.code}</td>
                                     <td className="py-4 px-6 text-primary font-medium">{product.brand}</td>
+                                    <td className="py-4 px-6 text-muted-foreground">{product.origin || '-'}</td>
                                     <td className="py-4 px-6 text-foreground font-medium">{product.name}</td>
                                     <td className="py-4 px-6 text-muted-foreground">{product.category}</td>
                                     <td className="py-4 px-6 text-center">

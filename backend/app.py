@@ -389,9 +389,9 @@ def add_product():
         try:
             cur = conn.cursor()
             cur.execute('''
-                INSERT INTO products (name, brand, code, category, stock, price, min_stock, image)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-            ''', (data['name'], data['brand'], data['code'], data['category'], 
+                INSERT INTO products (name, brand, origin, code, category, stock, price, min_stock, image)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+            ''', (data['name'], data['brand'], data.get('origin', ''), data['code'], data['category'], 
                   stock, price, min_stock, data.get('image')))
             conn.commit()
             new_id = cur.lastrowid
@@ -435,9 +435,9 @@ def update_product(id):
             cur = conn.cursor()
             cur.execute('''
                 UPDATE products 
-                SET name=?, brand=?, code=?, category=?, stock=?, price=?, min_stock=?, image=?
+                SET name=?, brand=?, origin=?, code=?, category=?, stock=?, price=?, min_stock=?, image=?
                 WHERE id=?
-            ''', (data['name'], data['brand'], data.get('code', ''), data['category'], 
+            ''', (data['name'], data['brand'], data.get('origin', ''), data.get('code', ''), data['category'], 
                   stock, price, min_stock, data.get('image'), id))
             conn.commit()
             return jsonify({'success': True})

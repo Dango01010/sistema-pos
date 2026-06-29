@@ -301,7 +301,10 @@ function VendedorDashboard() {
         try {
             const res = await fetch('/api/returns', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: { 
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+                },
                 body: JSON.stringify({
                     sale_id: returnSaleData.id || returnSaleData.sale?.id,
                     reason: returnReason,
@@ -509,16 +512,16 @@ function VendedorDashboard() {
                         {/* Header & Search */}
                         <div className="glass-panel p-4 rounded-2xl flex flex-col sm:flex-row gap-4 items-center justify-between shadow-lg z-10">
                             <div className="relative w-full max-w-md group">
-                                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-slate-400 group-focus-within:text-blue-400 transition-colors" />
+                                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-slate-500 dark:text-slate-400 group-focus-within:text-blue-400 transition-colors" />
                                 <input
                                     type="text"
                                     placeholder="Buscar producto, código o categoría..."
                                     value={searchTerm}
                                     onChange={(e) => setSearchTerm(e.target.value)}
-                                    className="w-full pl-10 pr-12 py-3 bg-slate-900/50 border border-white/10 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50 transition-all shadow-inner"
+                                    className="w-full pl-10 pr-12 py-3 bg-slate-100 dark:bg-slate-900/50 border border-slate-200 dark:border-white/10 rounded-xl text-slate-900 dark:text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50 transition-all shadow-inner"
                                 />
                                 <button
-                                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-slate-400 hover:text-white p-1 rounded-md hover:bg-white/10 transition-colors"
+                                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:text-white p-1 rounded-md hover:bg-slate-200 dark:hover:bg-white/10 transition-colors"
                                     onClick={handleScanHelper}
                                 >
                                     <QrCode className="w-5 h-5" />
@@ -529,7 +532,7 @@ function VendedorDashboard() {
                                 <Button
                                     variant="outline"
                                     onClick={() => { setIsHistoryOpen(true); fetchMySales(); }}
-                                    className="border-white/10 bg-white/5 hover:bg-white/10 text-white min-w-[100px]"
+                                    className="border-slate-200 dark:border-white/10 bg-white/5 hover:bg-slate-200 dark:hover:bg-white/10 text-slate-900 dark:text-white min-w-[100px]"
                                 >
                                     <FileText className="w-4 h-4 mr-2" />
                                     Mis Ventas
@@ -537,14 +540,14 @@ function VendedorDashboard() {
                                 <Button
                                     variant="outline"
                                     onClick={handleCurrencyToggle}
-                                    className="border-white/10 bg-white/5 hover:bg-white/10 text-white min-w-[100px]"
+                                    className="border-slate-200 dark:border-white/10 bg-white/5 hover:bg-slate-200 dark:hover:bg-white/10 text-slate-900 dark:text-white min-w-[100px]"
                                 >
                                     <RefreshCw className="w-4 h-4 mr-2" />
                                     {currency === 'USD' ? 'USD ($)' : 'Bs (BOL)'}
                                 </Button>
                                 {currency === 'USD' && (
-                                    <div className="flex items-center gap-1.5 bg-white/5 border border-white/10 px-2 py-1.5 rounded-md text-xs text-white">
-                                        <span className="text-slate-400">T/C:</span>
+                                    <div className="flex items-center gap-1.5 bg-white/5 border border-slate-200 dark:border-white/10 px-2 py-1.5 rounded-md text-xs text-slate-900 dark:text-white">
+                                        <span className="text-slate-500 dark:text-slate-400">T/C:</span>
                                         <input
                                             type="number"
                                             value={exchangeRate}
@@ -552,7 +555,7 @@ function VendedorDashboard() {
                                                 const val = parseFloat(e.target.value);
                                                 if (val > 0) setExchangeRate(val);
                                             }}
-                                            className="w-12 bg-transparent text-white focus:outline-none text-right font-medium"
+                                            className="w-12 bg-transparent text-slate-900 dark:text-white focus:outline-none text-right font-medium"
                                             step="0.01"
                                             min="0.01"
                                         />
@@ -564,7 +567,7 @@ function VendedorDashboard() {
                         {/* Categories Row */}
                         <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide mask-fade-right">
                             <button
-                                className={`whitespace-nowrap px-4 py-2 text-sm font-medium rounded-xl transition-all duration-300 ${searchTerm === '' ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-lg shadow-blue-500/25 border border-transparent' : 'bg-slate-900/40 border border-white/5 text-slate-400 hover:text-white hover:bg-white/10 hover:border-white/10'}`}
+                                className={`whitespace-nowrap px-4 py-2 text-sm font-medium rounded-xl transition-all duration-300 ${searchTerm === '' ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-lg shadow-blue-500/25 border border-transparent' : 'bg-slate-100 dark:bg-slate-900/40 border border-slate-200 dark:border-white/5 text-slate-500 dark:text-slate-400 hover:hover:text-white hover:bg-slate-200 dark:hover:bg-white/10 hover:border-slate-200 dark:border-white/10'}`}
                                 onClick={() => setSearchTerm('')}
                             >
                                 ✨ Todos
@@ -572,7 +575,7 @@ function VendedorDashboard() {
                             {uniqueCategories.map(cat => (
                                 <button
                                     key={cat}
-                                    className={`whitespace-nowrap px-4 py-2 text-sm font-medium rounded-xl transition-all duration-300 ${searchTerm === cat ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-lg shadow-blue-500/25 border border-transparent' : 'bg-slate-900/40 border border-white/5 text-slate-400 hover:text-white hover:bg-white/10 hover:border-white/10'}`}
+                                    className={`whitespace-nowrap px-4 py-2 text-sm font-medium rounded-xl transition-all duration-300 ${searchTerm === cat ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-lg shadow-blue-500/25 border border-transparent' : 'bg-slate-100 dark:bg-slate-900/40 border border-slate-200 dark:border-white/5 text-slate-500 dark:text-slate-400 hover:hover:text-white hover:bg-slate-200 dark:hover:bg-white/10 hover:border-slate-200 dark:border-white/10'}`}
                                     onClick={() => setSearchTerm(cat)}
                                 >
                                     {cat}
@@ -605,7 +608,7 @@ function VendedorDashboard() {
                                     </div>
                                 </>
                             ) : (
-                                <div className="h-full flex items-center justify-center text-slate-400">
+                                <div className="h-full flex items-center justify-center text-slate-500 dark:text-slate-400">
                                     No se encontraron productos
                                 </div>
                             )}
@@ -613,28 +616,28 @@ function VendedorDashboard() {
                     </div>
 
                     {/* Right Column: Cart - Same as AdminPOS */}
-                    <div className="w-full lg:w-[420px] flex flex-col glass-panel rounded-2xl overflow-hidden border-l border-white/10 shadow-2xl h-full">
-                        <div className="p-4 border-b border-white/10 bg-slate-900/60">
-                            <div className="flex items-center justify-between p-3 rounded-xl bg-white/5 border border-white/5 cursor-pointer hover:bg-white/10 transition-colors group" onClick={() => setIsClientModalOpen(true)}>
+                    <div className="w-full lg:w-[420px] flex flex-col glass-panel rounded-2xl overflow-hidden border-l border-slate-200 dark:border-white/10 shadow-2xl h-full">
+                        <div className="p-4 border-b border-slate-200 dark:border-white/10 bg-slate-100 dark:bg-slate-100/60 dark:bg-slate-900/60">
+                            <div className="flex items-center justify-between p-3 rounded-xl bg-white/5 border border-slate-200 dark:border-white/5 cursor-pointer hover:bg-slate-200 dark:hover:bg-white/10 transition-colors group" onClick={() => setIsClientModalOpen(true)}>
                                 <div className="flex items-center gap-3">
-                                    <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-blue-500 to-indigo-500 flex items-center justify-center text-white font-bold shadow-lg">
+                                    <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-blue-500 to-indigo-500 flex items-center justify-center text-slate-900 dark:text-white font-bold shadow-lg">
                                         <User className="w-5 h-5" />
                                     </div>
                                     <div>
-                                        <p className="text-sm font-bold text-white group-hover:text-blue-400 transition-colors">
+                                        <p className="text-sm font-bold text-slate-900 dark:text-white group-hover:text-blue-400 transition-colors">
                                             {selectedClient ? selectedClient.name : 'Cliente General'}
                                         </p>
-                                        <p className="text-xs text-slate-400">
+                                        <p className="text-xs text-slate-500 dark:text-slate-400">
                                             {selectedClient ? 'Cliente Registrado' : 'Sin programa de lealtad'}
                                         </p>
                                     </div>
                                 </div>
-                                <Button size="sm" variant="ghost" className="text-slate-400 hover:text-white"><Plus className="w-4 h-4" /></Button>
+                                <Button size="sm" variant="ghost" className="text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:text-white"><Plus className="w-4 h-4" /></Button>
                             </div>
                         </div>
 
                         <Dialog open={isClientModalOpen} onOpenChange={setIsClientModalOpen}>
-                            <DialogContent className="bg-slate-900 border-slate-700 text-white max-w-2xl">
+                            <DialogContent className="bg-slate-100 dark:bg-slate-900 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white max-w-2xl">
                                 <DialogHeader>
                                     <DialogTitle>Seleccionar Cliente</DialogTitle>
                                 </DialogHeader>
@@ -643,10 +646,10 @@ function VendedorDashboard() {
                                         <>
                                             <div className="flex gap-2">
                                                 <div className="relative flex-1">
-                                                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+                                                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500 dark:text-slate-400" />
                                                     <Input
                                                         placeholder="Buscar por nombre..."
-                                                        className="pl-9 bg-slate-800 border-slate-700 text-white"
+                                                        className="pl-9 bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white"
                                                         value={clientSearch}
                                                         onChange={(e) => setClientSearch(e.target.value)}
                                                     />
@@ -654,17 +657,17 @@ function VendedorDashboard() {
                                                 <Button onClick={() => setShowNewClientForm(true)}>Nuevo</Button>
                                             </div>
                                             <div className="max-h-[300px] overflow-y-auto space-y-2">
-                                                <div className="p-3 hover:bg-white/5 rounded-lg cursor-pointer border border-transparent hover:border-white/10"
+                                                <div className="p-3 hover:bg-slate-200 dark:hover:bg-white/5 rounded-lg cursor-pointer border border-transparent hover:border-slate-200 dark:border-white/10"
                                                     onClick={() => { setSelectedClient(null); setIsClientModalOpen(false); }}>
                                                     <p className="font-bold">Cliente General</p>
-                                                    <p className="text-xs text-slate-400">Venta de mostrador</p>
+                                                    <p className="text-xs text-slate-500 dark:text-slate-400">Venta de mostrador</p>
                                                 </div>
                                                 {clients.map(c => (
                                                     <div key={c.id}
-                                                        className="p-3 hover:bg-white/5 rounded-lg cursor-pointer border border-transparent hover:border-white/10"
+                                                        className="p-3 hover:bg-slate-200 dark:hover:bg-white/5 rounded-lg cursor-pointer border border-transparent hover:border-slate-200 dark:border-white/10"
                                                         onClick={() => { setSelectedClient(c); setIsClientModalOpen(false); }}>
                                                         <p className="font-bold">{c.name}</p>
-                                                        <p className="text-xs text-slate-400">{c.email} • {c.phone}</p>
+                                                        <p className="text-xs text-slate-500 dark:text-slate-400">{c.email} • {c.phone}</p>
                                                     </div>
                                                 ))}
                                             </div>
@@ -673,20 +676,20 @@ function VendedorDashboard() {
                                         <div className="space-y-4">
                                             <div className="space-y-2">
                                                 <Label>Nombre o Razón Social</Label>
-                                                <Input value={newClient.name} onChange={e => setNewClient({ ...newClient, name: e.target.value })} className="bg-slate-800 border-slate-700" />
+                                                <Input value={newClient.name} onChange={e => setNewClient({ ...newClient, name: e.target.value })} className="bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700" />
                                             </div>
                                             <div className="space-y-2">
                                                 <Label>CI / NIT</Label>
-                                                <Input value={newClient.ci_nit} onChange={e => setNewClient({ ...newClient, ci_nit: e.target.value })} className="bg-slate-800 border-slate-700" />
+                                                <Input value={newClient.ci_nit} onChange={e => setNewClient({ ...newClient, ci_nit: e.target.value })} className="bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700" />
                                             </div>
                                             <div className="grid grid-cols-2 gap-4">
                                                 <div className="space-y-2">
                                                     <Label>Email <span className="text-xs text-muted-foreground">(Opcional)</span></Label>
-                                                    <Input value={newClient.email} onChange={e => setNewClient({ ...newClient, email: e.target.value })} className="bg-slate-800 border-slate-700" />
+                                                    <Input value={newClient.email} onChange={e => setNewClient({ ...newClient, email: e.target.value })} className="bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700" />
                                                 </div>
                                                 <div className="space-y-2">
                                                     <Label>Teléfono <span className="text-xs text-muted-foreground">(Opcional)</span></Label>
-                                                    <Input value={newClient.phone} onChange={e => setNewClient({ ...newClient, phone: e.target.value })} className="bg-slate-800 border-slate-700" />
+                                                    <Input value={newClient.phone} onChange={e => setNewClient({ ...newClient, phone: e.target.value })} className="bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700" />
                                                 </div>
                                             </div>
                                             <div className="flex justify-end gap-2 pt-4">
@@ -699,7 +702,7 @@ function VendedorDashboard() {
                             </DialogContent>
                         </Dialog>
 
-                        <div className="flex-1 overflow-y-auto p-4 space-y-3 bg-slate-900/30">
+                        <div className="flex-1 overflow-y-auto p-4 space-y-3 bg-slate-100 dark:bg-slate-100/30 dark:bg-slate-900/30">
                             <AnimatePresence initial={false}>
                                 {cart.length === 0 ? (
                                     <div className="h-full flex flex-col items-center justify-center text-slate-500 opacity-50">
@@ -717,14 +720,14 @@ function VendedorDashboard() {
                                             initial={{ opacity: 0, x: 20 }}
                                             animate={{ opacity: 1, x: 0 }}
                                             exit={{ opacity: 0, x: -50 }}
-                                            className="bg-white/5 hover:bg-white/[0.08] rounded-xl p-3 flex gap-3 group border border-transparent hover:border-white/5 transition-all"
+                                            className="bg-white/5 hover:bg-white/[0.08] rounded-xl p-3 flex gap-3 group border border-transparent hover:border-slate-200 dark:border-white/5 transition-all"
                                         >
-                                            <img src={item.image || '/vite.svg'} alt="" className="w-16 h-16 rounded-lg object-cover bg-slate-800 shadow-sm" />
+                                            <img src={item.image || '/vite.svg'} alt="" className="w-16 h-16 rounded-lg object-cover bg-white dark:bg-slate-800 shadow-sm" />
                                             <div className="flex-1 min-w-0 flex flex-col justify-between">
                                                 <div className="flex justify-between items-start">
                                                     <div>
-                                                        <h4 className="text-sm font-medium text-white truncate pr-2">{item.name}</h4>
-                                                        <p className="text-[10px] text-slate-400">
+                                                        <h4 className="text-sm font-medium text-slate-900 dark:text-white truncate pr-2">{item.name}</h4>
+                                                        <p className="text-[10px] text-slate-500 dark:text-slate-400">
                                                             Unit: {currency === 'USD' ? '$' : 'Bs '}{getPrice(item.price)}
                                                         </p>
                                                     </div>
@@ -737,10 +740,10 @@ function VendedorDashboard() {
                                                 </div>
 
                                                 <div className="flex items-center justify-between mt-2">
-                                                    <div className="flex items-center gap-1 bg-slate-950 rounded-lg p-0.5 border border-white/5">
-                                                        <button onClick={() => updateQuantity(item.id, -1)} className="p-1 hover:bg-white/10 rounded text-slate-400 hover:text-white transition-colors"><Minus className="w-3 h-3" /></button>
-                                                        <span className="text-xs font-bold w-6 text-center text-white">{item.quantity}</span>
-                                                        <button onClick={() => updateQuantity(item.id, 1)} className="p-1 hover:bg-white/10 rounded text-slate-400 hover:text-white transition-colors"><Plus className="w-3 h-3" /></button>
+                                                    <div className="flex items-center gap-1 bg-white dark:bg-slate-950 rounded-lg p-0.5 border border-slate-200 dark:border-white/5">
+                                                        <button onClick={() => updateQuantity(item.id, -1)} className="p-1 hover:bg-slate-200 dark:hover:bg-white/10 rounded text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:text-white transition-colors"><Minus className="w-3 h-3" /></button>
+                                                        <span className="text-xs font-bold w-6 text-center text-slate-900 dark:text-white">{item.quantity}</span>
+                                                        <button onClick={() => updateQuantity(item.id, 1)} className="p-1 hover:bg-slate-200 dark:hover:bg-white/10 rounded text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:text-white transition-colors"><Plus className="w-3 h-3" /></button>
                                                     </div>
                                                     <span className="font-bold text-sm text-blue-400">
                                                         {currency === 'USD' ? '$' : 'Bs '}
@@ -754,7 +757,7 @@ function VendedorDashboard() {
                             </AnimatePresence>
                         </div>
 
-                        <div className="p-5 bg-slate-950 border-t border-white/10 space-y-4 shadow-[0_-10px_40px_rgba(0,0,0,0.5)] z-20">
+                        <div className="p-5 bg-white dark:bg-slate-950 border-t border-slate-200 dark:border-white/10 space-y-4 shadow-[0_-10px_40px_rgba(0,0,0,0.5)] z-20">
                             <div className="flex gap-2">
                                 <div className="relative flex-1">
                                     <Tag className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
@@ -763,10 +766,10 @@ function VendedorDashboard() {
                                         placeholder="Código de cupón"
                                         value={discountCode}
                                         onChange={(e) => setDiscountCode(e.target.value)}
-                                        className="w-full bg-slate-900 border border-white/10 rounded-lg py-2 pl-9 pr-2 text-xs text-white focus:outline-none focus:ring-1 focus:ring-blue-500"
+                                        className="w-full bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-white/10 rounded-lg py-2 pl-9 pr-2 text-xs text-slate-900 dark:text-white focus:outline-none focus:ring-1 focus:ring-blue-500"
                                     />
                                 </div>
-                                <Button size="sm" variant="outline" className="text-xs border-white/10" onClick={handleApplyDiscount}>Aplicar</Button>
+                                <Button size="sm" variant="outline" className="text-xs border-slate-200 dark:border-white/10" onClick={handleApplyDiscount}>Aplicar</Button>
                             </div>
                             {discountAmount > 0 && (
                                 <div className="flex justify-between text-emerald-400 text-sm">
@@ -776,26 +779,26 @@ function VendedorDashboard() {
                             )}
 
                             <div className="space-y-2 text-sm pt-2">
-                                <div className="flex justify-between text-slate-400">
+                                <div className="flex justify-between text-slate-500 dark:text-slate-400">
                                     <span>Subtotal</span>
                                     <span>{currency === 'USD' ? '$' : 'Bs '}{getPrice(cartTotal)}</span>
                                 </div>
-                                <div className="flex justify-between text-slate-400">
+                                <div className="flex justify-between text-slate-500 dark:text-slate-400">
                                     <span>Impuestos (13%)</span>
                                     <span>{currency === 'USD' ? '$' : 'Bs '}{getPrice(tax)}</span>
                                 </div>
-                                <div className="flex justify-between text-2xl font-bold text-white pt-3 border-t border-white/10 items-end">
-                                    <span className="text-base text-slate-300 font-normal">Total a Pagar</span>
+                                <div className="flex justify-between text-2xl font-bold text-slate-900 dark:text-white pt-3 border-t border-slate-200 dark:border-white/10 items-end">
+                                    <span className="text-base text-slate-600 dark:text-slate-300 font-normal">Total a Pagar</span>
                                     <span className="premium-text-gradient">{currency === 'USD' ? '$' : 'Bs '}{getPrice(grandTotal)}</span>
                                 </div>
                             </div>
 
                             <div className="grid grid-cols-3 gap-3 pt-2">
-                                <Button variant="outline" className="border-white/10 hover:bg-white/5 text-white h-12" onClick={() => setIsReturnOpen(true)}>
+                                <Button variant="outline" className="border-slate-200 dark:border-white/10 hover:bg-slate-200 dark:hover:bg-white/5 text-slate-900 dark:text-white h-12" onClick={() => setIsReturnOpen(true)}>
                                     <RefreshCw className="w-4 h-4 mr-2" />
                                     Devolución
                                 </Button>
-                                <Button variant="outline" className="border-white/10 hover:bg-white/5 text-white h-12" onClick={handleQuote}>
+                                <Button variant="outline" className="border-slate-200 dark:border-white/10 hover:bg-slate-200 dark:hover:bg-white/5 text-slate-900 dark:text-white h-12" onClick={handleQuote}>
                                     <FileText className="w-4 h-4 mr-2" />
                                     Cotizar
                                 </Button>
@@ -814,7 +817,7 @@ function VendedorDashboard() {
                 </div>
 
                 <Dialog open={isHistoryOpen} onOpenChange={setIsHistoryOpen}>
-                    <DialogContent className="bg-slate-900 border-slate-700 text-white max-w-3xl">
+                    <DialogContent className="bg-slate-100 dark:bg-slate-900 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white max-w-3xl">
                         <DialogHeader><DialogTitle>Mis Ventas</DialogTitle></DialogHeader>
                         <Table>
                             <TableHeader>
@@ -851,17 +854,17 @@ function VendedorDashboard() {
                 </Dialog>
 
                 <Dialog open={isReturnOpen} onOpenChange={setIsReturnOpen}>
-                    <DialogContent className="bg-slate-900 border-slate-700 text-white max-w-3xl">
+                    <DialogContent className="bg-slate-100 dark:bg-slate-900 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white max-w-3xl">
                         <DialogHeader><DialogTitle>Gestionar Devolución</DialogTitle></DialogHeader>
                         <div className="flex gap-2 mb-4">
-                            <Input placeholder="ID Venta" value={returnSaleId} onChange={e => setReturnSaleId(e.target.value)} className="bg-slate-800 border-slate-700" />
+                            <Input placeholder="ID Venta" value={returnSaleId} onChange={e => setReturnSaleId(e.target.value)} className="bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700" />
                             <Button onClick={handleReturnLookup}>Buscar</Button>
                         </div>
                         {returnSaleData && (
                             <div className="space-y-4">
                                 <div className="p-3 bg-white/5 rounded space-y-2">
                                     <p className="font-bold">Venta #{returnSaleData.id} - Total: Bs {returnSaleData.total}</p>
-                                    <p className="text-sm text-slate-300">
+                                    <p className="text-sm text-slate-600 dark:text-slate-300">
                                         Cliente: {returnSaleData.client_name || 'Consumidor Final'} {returnSaleData.client_ci ? `(${returnSaleData.client_ci})` : ''}
                                     </p>
                                 </div>
@@ -869,7 +872,7 @@ function VendedorDashboard() {
                                     <div className="space-y-2">
                                         <Label>Motivo de Devolución</Label>
                                         <select 
-                                            className="w-full bg-slate-800 border border-slate-700 rounded-md p-2"
+                                            className="w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-md p-2"
                                             value={returnReason}
                                             onChange={e => setReturnReason(e.target.value)}
                                         >
@@ -881,15 +884,15 @@ function VendedorDashboard() {
                                     </div>
                                     <div className="space-y-2">
                                         <Label>Evidencia Fotográfica (Opcional)</Label>
-                                        <Input type="file" accept="image/*" multiple onChange={handleImageUpload} className="bg-slate-800 border-slate-700" />
+                                        <Input type="file" accept="image/*" multiple onChange={handleImageUpload} className="bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700" />
                                         {returnImages.length > 0 && (
-                                            <p className="text-xs text-slate-400">{returnImages.length} imagen(es) seleccionada(s)</p>
+                                            <p className="text-xs text-slate-500 dark:text-slate-400">{returnImages.length} imagen(es) seleccionada(s)</p>
                                         )}
                                     </div>
                                     <div className="space-y-2 md:col-span-2">
                                         <Label>Descripción del Problema</Label>
                                         <textarea 
-                                            className="w-full bg-slate-800 border border-slate-700 rounded-md p-2 min-h-[80px]"
+                                            className="w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-md p-2 min-h-[80px]"
                                             placeholder="Detalla el motivo de la devolución..."
                                             value={returnDescription}
                                             onChange={e => setReturnDescription(e.target.value)}
@@ -928,14 +931,14 @@ function VendedorDashboard() {
 
                 {/* Product Details Modal */}
                 <Dialog open={isDetailsModalOpen} onOpenChange={setIsDetailsModalOpen}>
-                    <DialogContent className="bg-slate-900 border-slate-700 text-white max-w-2xl">
+                    <DialogContent className="bg-slate-100 dark:bg-slate-900 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white max-w-2xl">
                         <DialogHeader>
                             <DialogTitle>Detalles del Producto</DialogTitle>
                         </DialogHeader>
                         {selectedProductDetails && (
                             <div className="space-y-6">
                                 <div className="flex gap-6">
-                                    <div className="w-64 h-64 rounded-xl overflow-hidden bg-slate-800 flex-shrink-0">
+                                    <div className="w-64 h-64 rounded-xl overflow-hidden bg-white dark:bg-slate-800 flex-shrink-0">
                                         <img
                                             src={selectedProductDetails.image}
                                             alt={selectedProductDetails.name}
@@ -945,19 +948,19 @@ function VendedorDashboard() {
                                     <div className="flex-1 space-y-4">
                                         <div>
                                             <p className="text-xs text-slate-500 font-mono">{selectedProductDetails.code}</p>
-                                            <h3 className="text-2xl font-bold text-white mt-1">{selectedProductDetails.name}</h3>
+                                            <h3 className="text-2xl font-bold text-slate-900 dark:text-white mt-1">{selectedProductDetails.name}</h3>
                                             {selectedProductDetails.brand && (
-                                                <p className="text-sm text-slate-400 mt-1">Marca: {selectedProductDetails.brand}</p>
+                                                <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">Marca: {selectedProductDetails.brand}</p>
                                             )}
                                         </div>
 
                                         <div className="grid grid-cols-2 gap-4">
-                                            <div className="p-3 bg-white/5 rounded-lg border border-white/10">
-                                                <p className="text-xs text-slate-400">Categoría</p>
-                                                <p className="text-sm font-semibold text-white mt-1">{selectedProductDetails.category}</p>
+                                            <div className="p-3 bg-white/5 rounded-lg border border-slate-200 dark:border-white/10">
+                                                <p className="text-xs text-slate-500 dark:text-slate-400">Categoría</p>
+                                                <p className="text-sm font-semibold text-slate-900 dark:text-white mt-1">{selectedProductDetails.category}</p>
                                             </div>
-                                            <div className="p-3 bg-white/5 rounded-lg border border-white/10">
-                                                <p className="text-xs text-slate-400">Stock Disponible</p>
+                                            <div className="p-3 bg-white/5 rounded-lg border border-slate-200 dark:border-white/10">
+                                                <p className="text-xs text-slate-500 dark:text-slate-400">Stock Disponible</p>
                                                 <p className={`text-sm font-bold mt-1 ${selectedProductDetails.stock > 10 ? 'text-emerald-400' :
                                                     selectedProductDetails.stock > 0 ? 'text-yellow-400' : 'text-rose-400'
                                                     }`}>
@@ -967,16 +970,16 @@ function VendedorDashboard() {
                                         </div>
 
                                         <div className="p-4 bg-gradient-to-r from-blue-600/20 to-indigo-600/20 rounded-xl border border-blue-500/30">
-                                            <p className="text-xs text-slate-300">Precio</p>
-                                            <p className="text-3xl font-bold text-white mt-1">
+                                            <p className="text-xs text-slate-600 dark:text-slate-300">Precio</p>
+                                            <p className="text-3xl font-bold text-slate-900 dark:text-white mt-1">
                                                 {currency === 'USD' ? '$' : 'Bs '}{getPrice(selectedProductDetails.price)}
                                             </p>
                                         </div>
 
                                         {selectedProductDetails.description && (
                                             <div>
-                                                <p className="text-xs text-slate-400">Descripción</p>
-                                                <p className="text-sm text-slate-300 mt-1">{selectedProductDetails.description}</p>
+                                                <p className="text-xs text-slate-500 dark:text-slate-400">Descripción</p>
+                                                <p className="text-sm text-slate-600 dark:text-slate-300 mt-1">{selectedProductDetails.description}</p>
                                             </div>
                                         )}
                                     </div>

@@ -33,6 +33,15 @@ def run_migrations():
         if 'ci_nit' not in columns_clients:
             cur.execute("ALTER TABLE clients ADD COLUMN ci_nit TEXT")
             
+        cur.execute("PRAGMA table_info(products)")
+        columns_products = [info[1] for info in cur.fetchall()]
+        if 'image' not in columns_products:
+            cur.execute("ALTER TABLE products ADD COLUMN image TEXT")
+        if 'min_stock' not in columns_products:
+            cur.execute("ALTER TABLE products ADD COLUMN min_stock INTEGER DEFAULT 5")
+        if 'origin' not in columns_products:
+            cur.execute("ALTER TABLE products ADD COLUMN origin TEXT DEFAULT ''")
+            
         cur.execute("PRAGMA table_info(returns)")
         columns_returns = [info[1] for info in cur.fetchall()]
         if 'description' not in columns_returns:

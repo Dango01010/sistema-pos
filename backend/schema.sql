@@ -20,6 +20,7 @@ CREATE TABLE IF NOT EXISTS products (
     min_stock INTEGER DEFAULT 5, -- Added min_stock
     category TEXT NOT NULL,
     brand TEXT, -- Added brand
+    origin TEXT, -- Added origin
     code TEXT UNIQUE NOT NULL,
     image TEXT
 );

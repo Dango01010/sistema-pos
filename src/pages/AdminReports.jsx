@@ -6,6 +6,7 @@ import { BarChart, DollarSign, ShoppingBag, AlertTriangle, ArrowDownRight, Downl
 import { Pagination } from '@/components/ui/pagination.jsx';
 import { Button } from '@/components/ui/button';
 import { BarChart as RechartsBarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 const COLORS = ['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#06b6d4', '#ec4899', '#f97316'];
 
@@ -22,6 +23,8 @@ function AdminReports() {
     const [loading, setLoading] = useState(true);
     const [currentPage, setCurrentPage] = useState(1);
     const [currentPageReturns, setCurrentPageReturns] = useState(1);
+    const [selectedVendor, setSelectedVendor] = useState('All');
+    const [sellers, setSellers] = useState([]);
 
     const ITEMS_PER_PAGE = 15;
     const totalPages = Math.ceil(sales.length / ITEMS_PER_PAGE);
@@ -91,21 +94,39 @@ function AdminReports() {
     };
 
     useEffect(() => {
-        const fetchData = async () => {
+        const fetchSellers = async () => {
             try {
-                const statsResponse = await fetch('/api/reports/stats');
+                const response = await fetch('/api/users');
+                if (response.ok) {
+                    const data = await response.json();
+                    setSellers(data.filter(u => u.role === 'vendedor'));
+                }
+            } catch (error) {
+                console.error("Error fetching sellers:", error);
+            }
+        };
+        fetchSellers();
+    }, []);
+
+    useEffect(() => {
+        const fetchData = async () => {
+            setLoading(true);
+            try {
+                const queryParam = selectedVendor !== 'All' ? `?vendor=${encodeURIComponent(selectedVendor)}` : '';
+
+                const statsResponse = await fetch(`/api/reports/stats${queryParam}`);
                 const statsData = await statsResponse.json();
                 setStats(statsData);
 
-                const salesResponse = await fetch('/api/reports/sales');
+                const salesResponse = await fetch(`/api/reports/sales${queryParam}`);
                 const salesData = await salesResponse.json();
                 setSales(salesData);
 
-                const returnsResponse = await fetch('/api/returns');
+                const returnsResponse = await fetch(`/api/returns${queryParam}`);
                 const returnsData = await returnsResponse.json();
                 setReturns(returnsData.filter(r => ['Aprobado', 'Completado', 'approved'].includes(r.status)));
 
-                const categoryResponse = await fetch('/api/reports/sales-by-category');
+                const categoryResponse = await fetch(`/api/reports/sales-by-category${queryParam}`);
                 if(categoryResponse.ok) {
                     const categoryData = await categoryResponse.json();
                     setCategorySales(categoryData);
@@ -118,7 +139,7 @@ function AdminReports() {
         };
 
         fetchData();
-    }, []);
+    }, [selectedVendor]);
 
     const formatCurrency = (amount) => {
         return `Bs ${new Intl.NumberFormat('en-US').format(amount)}`;
@@ -136,7 +157,22 @@ function AdminReports() {
                             <h1 className="text-3xl font-bold tracking-tight text-foreground">Reportes y Estadísticas</h1>
                             <p className="text-muted-foreground mt-1">Resumen general del rendimiento del negocio.</p>
                         </div>
-                        <div className="flex gap-3">
+                        <div className="flex flex-col sm:flex-row gap-3">
+                            <div className="w-48">
+                                <Select value={selectedVendor} onValueChange={setSelectedVendor}>
+                                    <SelectTrigger className="w-full">
+                                        <SelectValue placeholder="Seleccionar Vendedor" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        <SelectItem value="All">Todos los vendedores</SelectItem>
+                                        {sellers.map(seller => (
+                                            <SelectItem key={seller.id} value={seller.name}>
+                                                {seller.name}
+                                            </SelectItem>
+                                        ))}
+                                    </SelectContent>
+                                </Select>
+                            </div>
                             <Button 
                                 variant="outline" 
                                 className="glass-card text-foreground border-border hover:bg-accent"

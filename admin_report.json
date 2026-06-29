@@ -1,0 +1,38 @@
+[
+  {
+    "endpoint": "/api/login",
+    "status": 200,
+    "success": true,
+    "note": "Admin login successful"
+  },
+  {
+    "endpoint": "GET /api/dashboard/stats",
+    "status": 200,
+    "success": true,
+    "note": "Dashboard stats retrieved"
+  },
+  {
+    "endpoint": "GET /api/users",
+    "status": 200,
+    "success": true,
+    "note": "Found 9 users"
+  },
+  {
+    "endpoint": "POST /api/products",
+    "status": 200,
+    "success": true,
+    "note": "Product created successfully"
+  },
+  {
+    "endpoint": "DELETE /api/products/281",
+    "status": 200,
+    "success": true,
+    "note": "Product deleted successfully"
+  },
+  {
+    "endpoint": "GET /api/reports/sales",
+    "status": 200,
+    "success": true,
+    "note": "Reports retrieved"
+  }
+]

@@ -15,6 +15,7 @@ function InventoryModule() {
     const [categories, setCategories] = useState([]);
     const [loading, setLoading] = useState(true);
     const [currentPage, setCurrentPage] = useState(1);
+    const [stockFilter, setStockFilter] = useState('all'); // 'all', 'green', 'yellow', 'red'
 
     const [formState, setFormState] = useState({
         id: null,
@@ -42,9 +43,13 @@ function InventoryModule() {
     React.useEffect(() => {
         const fetchProducts = async () => {
             try {
-                const res = await fetch('/api/products');
+                const res = await fetch('/api/products', { headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` } });
                 const data = await res.json();
-                setProducts(data);
+                if (Array.isArray(data)) {
+                    setProducts(data);
+                } else {
+                    console.error("Invalid response for products:", data);
+                }
             } catch (error) {
                 console.error("Error fetching products:", error);
                 toast({ title: "Error", description: "No se pudo cargar el inventario.", variant: "destructive" });
@@ -65,11 +70,25 @@ function InventoryModule() {
         fetchCategories();
     }, []);
 
-    const filteredProducts = products.filter(product =>
-        product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        product.code.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        (product.brand && product.brand.toLowerCase().includes(searchTerm.toLowerCase()))
-    );
+    const filteredProducts = products.filter(product => {
+        const searchLower = (searchTerm || '').toLowerCase();
+        const matchesSearch = 
+            (product.name || '').toLowerCase().includes(searchLower) ||
+            (product.code || '').toLowerCase().includes(searchLower) ||
+            (product.brand || '').toLowerCase().includes(searchLower) ||
+            (product.category || '').toLowerCase().includes(searchLower);
+            
+        let matchesStock = true;
+        if (stockFilter === 'green') {
+            matchesStock = product.stock > product.min;
+        } else if (stockFilter === 'yellow') {
+            matchesStock = product.stock <= product.min && product.stock > 0;
+        } else if (stockFilter === 'red') {
+            matchesStock = product.stock === 0;
+        }
+        
+        return matchesSearch && matchesStock;
+    });
 
     const ITEMS_PER_PAGE = 15;
     const totalPages = Math.ceil(filteredProducts.length / ITEMS_PER_PAGE);
@@ -86,6 +105,31 @@ function InventoryModule() {
         }
     };
 
+
+    const handleCreateCategory = async () => {
+        if (!newCategoryName) return;
+        try {
+            const res = await fetch('/api/categories', {
+                method: 'POST',
+                headers: { 
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${localStorage.getItem('token')}` 
+                },
+                body: JSON.stringify({ name: newCategoryName })
+            });
+            if (res.ok) {
+                const data = await res.json();
+                setCategories([...categories, data]);
+                setNewCategoryName('');
+                setIsCategoryModalOpen(false);
+                toast({ title: "Categoría Creada", description: "La categoría se ha creado correctamente." });
+            } else {
+                toast({ title: "Error", description: "No se pudo crear la categoría.", variant: "destructive" });
+            }
+        } catch (error) {
+            console.error(error);
+        }
+    };
 
     const handleOpenAdd = () => {
         setIsEditing(false);
@@ -111,7 +155,10 @@ function InventoryModule() {
             if (isEditing) {
                 const res = await fetch(`/api/products/${formState.id}`, {
                     method: 'PUT',
-                    headers: { 'Content-Type': 'application/json' },
+                    headers: { 
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    },
                     body: JSON.stringify(formState)
                 });
                 if (!res.ok) throw new Error('Error updating product');
@@ -126,7 +173,10 @@ function InventoryModule() {
             } else {
                 const res = await fetch('/api/products', {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
+                    headers: { 
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    },
                     body: JSON.stringify(formState)
                 });
 
@@ -159,7 +209,12 @@ function InventoryModule() {
     const handleDelete = async (id) => {
         if (!window.confirm('¿Estás seguro de eliminar este producto? Esta acción no se puede deshacer.')) return;
         try {
-            const res = await fetch(`/api/products/${id}`, { method: 'DELETE' });
+            const res = await fetch(`/api/products/${id}`, { 
+                method: 'DELETE',
+                headers: {
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+                }
+            });
             if (!res.ok) {
                 const data = await res.json();
                 toast({ title: 'Error', description: data.error || 'No se pudo eliminar', variant: 'destructive' });
@@ -181,15 +236,27 @@ function InventoryModule() {
         <>
             <div className="space-y-6">
                 <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-                    <div className="relative flex-1 max-w-md">
-                        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-slate-400" />
-                        <input
-                            type="text"
-                            placeholder="Buscar por nombre, código o marca..."
-                            value={searchTerm}
-                            onChange={(e) => setSearchTerm(e.target.value)}
-                            className="w-full pl-10 pr-4 py-3 bg-background border border-border rounded-lg text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary"
-                        />
+                    <div className="relative flex-1 max-w-2xl flex gap-2">
+                        <div className="relative flex-1">
+                            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-slate-400" />
+                            <input
+                                type="text"
+                                placeholder="Buscar por nombre, código o marca..."
+                                value={searchTerm}
+                                onChange={(e) => setSearchTerm(e.target.value)}
+                                className="w-full pl-10 pr-4 py-3 bg-background border border-border rounded-lg text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary"
+                            />
+                        </div>
+                        <select
+                            value={stockFilter}
+                            onChange={(e) => setStockFilter(e.target.value)}
+                            className="bg-background border border-border rounded-lg text-foreground py-3 px-4 focus:outline-none focus:ring-2 focus:ring-primary min-w-[200px]"
+                        >
+                            <option value="all">Todo el stock</option>
+                            <option value="green">Stock Normal (Verde)</option>
+                            <option value="yellow">Stock Bajo (Amarillo)</option>
+                            <option value="red">Agotado (Rojo)</option>
+                        </select>
                     </div>
                 </div>
 
@@ -276,9 +343,9 @@ function InventoryModule() {
                                             />
                                             {showCategoryDropdown && categorySearch && (
                                                 <div className="absolute top-full left-0 w-full mt-1 bg-slate-800 border border-slate-700 rounded-md shadow-lg z-50 max-h-48 overflow-y-auto">
-                                                    {categories.filter(c => c.name.toLowerCase().includes(categorySearch.toLowerCase())).length > 0 ? (
+                                                    {categories.filter(c => (c.name || '').toLowerCase().includes((categorySearch || '').toLowerCase())).length > 0 ? (
                                                         categories
-                                                            .filter(c => c.name.toLowerCase().includes(categorySearch.toLowerCase()))
+                                                            .filter(c => (c.name || '').toLowerCase().includes((categorySearch || '').toLowerCase()))
                                                             .map((cat, idx) => (
                                                                 <div
                                                                     key={idx}
@@ -415,10 +482,11 @@ function InventoryModule() {
                                     <td className="py-4 px-6 text-foreground font-medium">{product.name}</td>
                                     <td className="py-4 px-6 text-muted-foreground">{product.category}</td>
                                     <td className="py-4 px-6 text-center">
-                                        <span className={`px-3 py-1 rounded-full text-sm font-semibold ${product.stock > product.min * 2 ? 'bg-green-500/20 text-green-400' :
-                                            product.stock > product.min ? 'bg-yellow-500/20 text-yellow-400' :
-                                                'bg-red-500/20 text-red-400'
-                                            }`}>
+                                        <span className={`px-3 py-1 rounded-full text-sm font-semibold ${
+                                            product.stock === 0 ? 'bg-red-500/20 text-red-400' :
+                                            product.stock <= product.min ? 'bg-yellow-500/20 text-yellow-400' :
+                                            'bg-green-500/20 text-green-400'
+                                        }`}>
                                             {product.stock}
                                         </span>
                                     </td>

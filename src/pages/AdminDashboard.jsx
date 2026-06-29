@@ -74,7 +74,7 @@ function AdminDashboard() {
     return (
         <>
             <Helmet>
-                <title>Panel Administrativo - Multirepuestos Ramos</title>
+                <title>Panel Administrador - Multirepuestos Ramos</title>
             </Helmet>
             <DashboardLayout role="admin">
                 <div className="space-y-8 pb-10">
@@ -85,12 +85,12 @@ function AdminDashboard() {
                             <h1 className="text-3xl font-bold tracking-tight text-foreground">
                                 Panel <span className="premium-text-gradient">Principal</span>
                             </h1>
-                            <p className="text-muted-foreground mt-1">Visión general del rendimiento y gestión empresarial.</p>
+                            <p className="text-muted-foreground mt-1">Visión general de estado.</p>
                         </div>
                         <div className="flex gap-3 items-center">
                             <div className="relative flex items-center shadow-lg shadow-primary/20 rounded-md bg-primary text-primary-foreground focus-within:ring-2 ring-offset-2 ring-primary">
                                 <Calendar className="w-4 h-4 ml-4 mr-2" />
-                                <select 
+                                <select
                                     className="appearance-none bg-transparent py-2 pr-8 pl-1 outline-none text-sm font-medium cursor-pointer"
                                     value={period}
                                     onChange={(e) => setPeriod(e.target.value)}
@@ -100,16 +100,15 @@ function AdminDashboard() {
                                     <option value="all" className="text-black bg-white">Histórico Total</option>
                                 </select>
                                 <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2">
-                                    <svg className="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
+                                    <svg className="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" /></svg>
                                 </div>
                             </div>
                         </div>
                     </div>
 
                     {/* KPI Cards */}
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
                         <StatCard title="Ingresos Totales" value={`Bs ${stats.total_revenue.toLocaleString()}`} subtext="Ingresos brutos" icon={DollarSign} trend={14.5} color="bg-blue-500" delay={0.1} />
-                        <StatCard title="Beneficio Neto (Est.)" value={`Bs ${stats.net_profit.toLocaleString()}`} subtext="Margen estimado 30%" icon={TrendingUp} trend={8.2} color="bg-emerald-500" delay={0.2} />
                         <StatCard title="Transacciones" value={stats.active_customers} subtext="Total de ventas realizadas" icon={Users} trend={3.8} color="bg-purple-500" delay={0.3} />
                         <StatCard title="Inventario Bajo" value={`${stats.low_inventory} Items`} subtext="Requiere reabastecimiento" icon={AlertTriangle} trend={-12} color="bg-amber-500" delay={0.4} />
                     </div>

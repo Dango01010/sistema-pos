@@ -8,7 +8,7 @@ function AdminOperations() {
     return (
         <>
             <Helmet>
-                <title>Solicitudes de Devolución - Admin</title>
+                <title>Solicitud de Devolución - Administrador</title>
             </Helmet>
             <DashboardLayout role="admin">
                 <div className="space-y-8 pb-10">

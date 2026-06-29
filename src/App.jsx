@@ -13,6 +13,7 @@ import PrintInvoice from '@/pages/PrintInvoice';
 
 
 import AdminReports from '@/pages/AdminReports';
+import AdminQR from '@/pages/AdminQR';
 import VendedorHistory from '@/pages/VendedorHistory';
 import VendedorDashboard from '@/pages/VendedorDashboard';
 
@@ -89,6 +90,14 @@ function AppRoutes() {
                     element={
                         <ProtectedRoute allowedRoles={['admin']}>
                             <AdminReports />
+                        </ProtectedRoute>
+                    }
+                />
+                <Route
+                    path="/admin/qr-settings"
+                    element={
+                        <ProtectedRoute allowedRoles={['admin']}>
+                            <AdminQR />
                         </ProtectedRoute>
                     }
                 />

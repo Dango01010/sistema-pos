@@ -12,6 +12,42 @@ import {
 } from "@/components/ui/dialog";
 import { Pagination } from "@/components/ui/pagination.jsx";
 
+const AuthenticatedImage = ({ src, alt, className }) => {
+    const [imageSrc, setImageSrc] = useState(null);
+    const [error, setError] = useState(false);
+
+    useEffect(() => {
+        const fetchImage = async () => {
+            try {
+                const response = await fetch(src, {
+                    headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
+                });
+                if (!response.ok) throw new Error('Network response was not ok');
+                const blob = await response.blob();
+                setImageSrc(URL.createObjectURL(blob));
+            } catch (err) {
+                console.error('Error fetching image:', err);
+                setError(true);
+            }
+        };
+        fetchImage();
+
+        return () => {
+            if (imageSrc) URL.revokeObjectURL(imageSrc);
+        };
+    }, [src]);
+
+    if (error) {
+        return <div className={`flex items-center justify-center bg-muted text-muted-foreground ${className}`}>Error</div>;
+    }
+
+    if (!imageSrc) {
+        return <div className={`flex items-center justify-center bg-muted animate-pulse ${className}`}>Cargando...</div>;
+    }
+
+    return <img src={imageSrc} alt={alt} className={className} />;
+};
+
 function RMAModule() {
     const [rmas, setRmas] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -20,7 +56,9 @@ function RMAModule() {
 
     // Fetch returns on mount
     React.useEffect(() => {
-        fetch('/api/returns')
+        fetch('/api/returns', {
+            headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
+        })
             .then(res => res.json())
             .then(data => {
                 setRmas(data);
@@ -38,7 +76,10 @@ function RMAModule() {
         try {
             const res = await fetch(`/api/returns/${id}/status`, {
                 method: 'PUT',
-                headers: { 'Content-Type': 'application/json' },
+                headers: { 
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+                },
                 body: JSON.stringify({ status: newStatus })
             });
 
@@ -197,13 +238,27 @@ function RMAModule() {
                             <div className="space-y-2">
                                 <h4 className="font-semibold">Evidencia Adjunta</h4>
                                 <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
-                                    {/* Placeholders for images */}
-                                    <div className="aspect-square bg-muted rounded-md flex items-center justify-center text-xs text-muted-foreground border border-dashed border-muted-foreground/30">
-                                        Foto 1
-                                    </div>
-                                    <div className="aspect-square bg-muted rounded-md flex items-center justify-center text-xs text-muted-foreground border border-dashed border-muted-foreground/30">
-                                        Foto 2
-                                    </div>
+                                    {(() => {
+                                        let images = [];
+                                        if (selectedRMA.evidence_images) {
+                                            try {
+                                                images = JSON.parse(selectedRMA.evidence_images);
+                                            } catch (e) {
+                                                console.error("Error parsing evidence_images", e);
+                                            }
+                                        }
+                                        if (!images || images.length === 0) {
+                                            return <div className="text-sm text-muted-foreground col-span-2">No hay evidencia adjunta.</div>;
+                                        }
+                                        return images.map((img, idx) => (
+                                            <AuthenticatedImage 
+                                                key={idx} 
+                                                src={`/api/uploads/returns/${img}`} 
+                                                alt={`Evidencia ${idx + 1}`} 
+                                                className="aspect-square object-cover rounded-md border border-muted-foreground/30" 
+                                            />
+                                        ));
+                                    })()}
                                 </div>
                             </div>
                         </div>

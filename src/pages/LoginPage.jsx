@@ -42,7 +42,7 @@ function LoginPage() {
     return (
         <>
             <Helmet>
-                <title>Login - AutoParts Pro</title>
+                <title>Login</title>
             </Helmet>
             <div className="min-h-screen flex w-full bg-slate-950 relative overflow-hidden">
                 {/* Background Effects */}
@@ -70,7 +70,7 @@ function LoginPage() {
                             transition={{ delay: 0.3 }}
                             className="text-6xl font-bold text-white mb-6 leading-tight"
                         >
-                            Calidad y Potencia para tu <span className="text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-orange-500">Maquinaria</span>
+                            Calidad de respuesto para tu <span className="text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-orange-500">Maquinaria</span>
                         </motion.h1>
 
                         <motion.p

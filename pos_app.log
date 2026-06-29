@@ -1,0 +1,6 @@
+{"timestamp": "2026-06-29 01:25:07,600", "level": "INFO", "message": "Application started", "module": "app", "funcName": "<module>"}
+{"timestamp": "2026-06-29 01:25:07,622", "level": "INFO", "message": "Starting Waitress production server on port 5001", "module": "app", "funcName": "<module>"}
+{"timestamp": "2026-06-29 01:25:07,622", "level": "INFO", "message": "Database backed up to autoparts_backup_20260629_012507.db", "module": "app", "funcName": "backup_database"}
+{"timestamp": "2026-06-29 01:25:17,414", "level": "INFO", "message": "Application started", "module": "app", "funcName": "<module>"}
+{"timestamp": "2026-06-29 01:25:17,424", "level": "INFO", "message": "Starting Waitress production server on port 5001", "module": "app", "funcName": "<module>"}
+{"timestamp": "2026-06-29 01:25:17,426", "level": "INFO", "message": "Database backed up to autoparts_backup_20260629_012517.db", "module": "app", "funcName": "backup_database"}

@@ -8,13 +8,13 @@ function AdminInventory() {
     return (
         <>
             <Helmet>
-                <title>Inventario - Admin</title>
+                <title>Inventario - Administrador</title>
             </Helmet>
             <DashboardLayout role="admin">
                 <div className="space-y-8 pb-10">
                     <div>
-                        <h1 className="text-3xl font-bold tracking-tight text-foreground">Inventario & Códigos</h1>
-                        <p className="text-muted-foreground mt-1">Gestión completa de stock y catalogación.</p>
+                        <h1 className="text-3xl font-bold tracking-tight text-foreground">Inventario y Codigo de producto</h1>
+                        <p className="text-muted-foreground mt-1">Gestión de stock y catalogación.</p>
                     </div>
                     <InventoryModule />
                     <BarcodeModule />

@@ -1,0 +1,32 @@
+[
+  {
+    "endpoint": "/api/login",
+    "status": 200,
+    "success": true,
+    "note": "Login successful"
+  },
+  {
+    "endpoint": "GET /api/products",
+    "status": 200,
+    "success": true,
+    "note": "Found 271 products"
+  },
+  {
+    "endpoint": "POST /api/quotations",
+    "status": 400,
+    "success": false,
+    "note": "Quotation created"
+  },
+  {
+    "endpoint": "POST /api/sales",
+    "status": 400,
+    "success": false,
+    "note": "Sale created"
+  },
+  {
+    "endpoint": "GET /api/sales/my-sales",
+    "status": 200,
+    "success": true,
+    "note": "Found 50 sales"
+  }
+]

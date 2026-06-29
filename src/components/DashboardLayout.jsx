@@ -44,7 +44,9 @@ function DashboardLayout({ children, role }) {
                 const res = await fetch('/api/notifications');
                 if (res.ok) {
                     const data = await res.json();
-                    setNotifications(data);
+                    const dismissed = JSON.parse(localStorage.getItem('dismissed_notifications') || '[]');
+                    const filteredData = data.filter(n => !dismissed.includes(n.id));
+                    setNotifications(filteredData);
                 }
             } catch (error) {
                 console.error("Error fetching notifications:", error);
@@ -71,6 +73,11 @@ function DashboardLayout({ children, role }) {
     const dismissNotification = (id, e) => {
         e.stopPropagation();
         setNotifications(prev => prev.filter(n => n.id !== id));
+        const dismissed = JSON.parse(localStorage.getItem('dismissed_notifications') || '[]');
+        if (!dismissed.includes(id)) {
+            dismissed.push(id);
+            localStorage.setItem('dismissed_notifications', JSON.stringify(dismissed));
+        }
     };
 
     const handleLogout = () => {
@@ -85,7 +92,8 @@ function DashboardLayout({ children, role }) {
             { icon: ArrowRightLeft, label: 'Solicitudes de Devolución', path: '/admin/operations' },
             { icon: ShoppingCart, label: 'Ventas & POS', path: '/admin/pos' },
             { icon: Users, label: 'Usuarios & RRHH', path: '/admin/users' },
-            { icon: FileText, label: 'Reportes', path: '/admin/reports' }
+            { icon: FileText, label: 'Reportes', path: '/admin/reports' },
+            { icon: QrCode, label: 'Códigos QR', path: '/admin/qr-settings' }
         ],
         vendedor: [
             { icon: ShoppingCart, label: 'Punto de Venta', path: '/vendedor' },

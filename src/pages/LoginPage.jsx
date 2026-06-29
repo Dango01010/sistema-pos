@@ -79,7 +79,7 @@ function LoginPage() {
                             transition={{ delay: 0.4 }}
                             className="text-xl text-slate-400 mb-8 leading-relaxed"
                         >
-                            Venta especializada de repuestos para maquinaria pesada y vehículos. Soluciones integrales para tu flota.
+                            Venta especializada de repuestos de vehiculos y maquinaria pesada.
                         </motion.p>
 
                         <motion.div
@@ -111,8 +111,8 @@ function LoginPage() {
                             <div className="inline-flex p-3 rounded-2xl bg-yellow-600/20 text-yellow-500 mb-4">
                                 <Car className="w-8 h-8" />
                             </div>
-                            <h2 className="text-2xl font-bold text-white">Bienvenido de nuevo</h2>
-                            <p className="text-slate-400 text-sm mt-2">Ingresa tus credenciales para acceder</p>
+                            <h2 className="text-2xl font-bold text-white">Bienvenido</h2>
+                            <p className="text-slate-400 text-sm mt-2">Ingresa tus credenciales para acceder al sistema</p>
                         </div>
 
                         <form onSubmit={handleLogin} className="space-y-6">

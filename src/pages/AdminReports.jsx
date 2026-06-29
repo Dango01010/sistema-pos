@@ -347,7 +347,8 @@ function AdminReports() {
                                         <tr>
                                             <th className="px-4 py-3">ID RMA</th>
                                             <th className="px-4 py-3">Fecha</th>
-                                            <th className="px-4 py-3">Cliente</th>
+                                            <th className="px-4 py-3">Vendedor (Venta)</th>
+                                            <th className="px-4 py-3">Procesado Por</th>
                                             <th className="px-4 py-3">Motivo</th>
                                             <th className="px-4 py-3 text-right">Total Devuelto</th>
                                         </tr>
@@ -362,7 +363,16 @@ function AdminReports() {
                                                 <tr key={rma.id} className="border-b border-border hover:bg-muted/50 transition-colors">
                                                     <td className="px-4 py-3 font-medium">RMA-{rma.id}</td>
                                                     <td className="px-4 py-3">{rma.date}</td>
-                                                    <td className="px-4 py-3 text-muted-foreground">{rma.client}</td>
+                                                    <td className="px-4 py-3">
+                                                        <span className="bg-primary/10 text-primary px-2 py-1 rounded text-xs font-semibold">
+                                                            {rma.vendor_name || 'Desconocido'}
+                                                        </span>
+                                                    </td>
+                                                    <td className="px-4 py-3">
+                                                        <span className="bg-purple-500/10 text-purple-500 px-2 py-1 rounded text-xs font-semibold">
+                                                            {rma.processed_by_name || 'No Registrado'}
+                                                        </span>
+                                                    </td>
                                                     <td className="px-4 py-3"><span className="bg-red-500/10 text-red-500 px-2 py-0.5 rounded text-xs">{rma.reason}</span></td>
                                                     <td className="px-4 py-3 text-right font-bold text-red-500">
                                                         - {formatCurrency(rma.total)}

@@ -736,15 +736,15 @@ def get_returns():
     try:
         vendor = request.args.get('vendor', 'All')
         
-        query = '''
             SELECT r.id, r.reason, r.total_refunded as total, r.status, r.created_at as date,
                    r.description, r.evidence_images,
                    COALESCE(c.name, 'Cliente General') as client, s.payment_method as invoice,
-                   u.name as vendor_name
+                   u.name as vendor_name, u2.name as processed_by_name
             FROM returns r
             JOIN sales s ON r.sale_id = s.id
             LEFT JOIN clients c ON s.client_id = c.id
             LEFT JOIN users u ON s.user_id = u.id
+            LEFT JOIN users u2 ON r.processed_by_id = u2.id
         '''
         
         if vendor != 'All':
@@ -1366,8 +1366,8 @@ def create_return():
         conn = get_db_connection()
         try:
             cur = conn.cursor()
-            cur.execute('INSERT INTO returns (sale_id, reason, description, evidence_images, total_refunded) VALUES (?, ?, ?, ?, 0)',
-                        (data['sale_id'], reason, description, images_json))
+            cur.execute('INSERT INTO returns (sale_id, reason, description, evidence_images, total_refunded, processed_by_id) VALUES (?, ?, ?, ?, 0, ?)',
+                        (data['sale_id'], reason, description, images_json, getattr(g, 'user_id', None)))
             return_id = cur.lastrowid
             
             real_refund = 0

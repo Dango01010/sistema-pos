@@ -39,6 +39,8 @@ def run_migrations():
             cur.execute("ALTER TABLE returns ADD COLUMN description TEXT")
         if 'evidence_images' not in columns_returns:
             cur.execute("ALTER TABLE returns ADD COLUMN evidence_images TEXT")
+        if 'processed_by_id' not in columns_returns:
+            cur.execute("ALTER TABLE returns ADD COLUMN processed_by_id INTEGER")
 
         cur.execute("PRAGMA table_info(quotations)")
         columns_quotations = [info[1] for info in cur.fetchall()]

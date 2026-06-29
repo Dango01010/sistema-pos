@@ -348,7 +348,7 @@ function AdminReports() {
                                             <th className="px-4 py-3">ID RMA</th>
                                             <th className="px-4 py-3">Fecha</th>
                                             <th className="px-4 py-3">Vendedor (Venta)</th>
-                                            <th className="px-4 py-3">Procesado Por</th>
+                                            <th className="px-4 py-3">Solicitado Por</th>
                                             <th className="px-4 py-3">Motivo</th>
                                             <th className="px-4 py-3 text-right">Total Devuelto</th>
                                         </tr>

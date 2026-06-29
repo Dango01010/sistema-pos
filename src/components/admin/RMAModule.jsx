@@ -133,6 +133,7 @@ function RMAModule() {
                                     <div>
                                         <h4 className="font-bold text-foreground">RMA-{rma.id}: {rma.title || 'Devolución de Venta'}</h4>
                                         <p className="text-sm text-muted-foreground">Cliente: {rma.client} • Factura #{rma.invoice}</p>
+                                        <p className="text-sm text-muted-foreground">Solicitado por: <span className="font-medium text-foreground">{rma.processed_by_name || 'No Registrado'}</span></p>
                                         <p className="text-xs mt-1 text-red-400 bg-red-500/5 w-fit px-2 py-0.5 rounded">Motivo: {rma.reason}</p>
                                     </div>
                                 </div>
@@ -171,6 +172,7 @@ function RMAModule() {
                                     <div>
                                         <h4 className="font-bold text-foreground">RMA-{rma.id}: {rma.title || 'Devolución de Venta'}</h4>
                                         <p className="text-sm text-muted-foreground">Cliente: {rma.client} • Factura #{rma.invoice} • Fecha: {rma.date}</p>
+                                        <p className="text-sm text-muted-foreground">Solicitado por: <span className="font-medium text-foreground">{rma.processed_by_name || 'No Registrado'}</span></p>
                                         <div className="flex gap-2 mt-1">
                                             <p className="text-xs bg-muted px-2 py-0.5 rounded">Motivo: {rma.reason}</p>
                                             <p className={`text-xs px-2 py-0.5 rounded ${rma.status === 'approved' ? 'bg-green-500/10 text-green-600' : 'bg-red-500/10 text-red-600'}`}>
@@ -219,6 +221,10 @@ function RMAModule() {
                                     <p className="font-medium">{selectedRMA.date}</p>
                                 </div>
                                 <div className="space-y-1">
+                                    <p className="text-xs text-muted-foreground uppercase tracking-wider">Solicitado Por</p>
+                                    <p className="font-medium">{selectedRMA.processed_by_name || 'No Registrado'}</p>
+                                </div>
+                                <div className="space-y-1">
                                     <p className="text-xs text-muted-foreground uppercase tracking-wider">Motivo</p>
                                     <span className="inline-block px-2 py-0.5 rounded bg-red-100 text-red-700 text-sm font-medium">
                                         {selectedRMA.reason}
@@ -241,10 +247,14 @@ function RMAModule() {
                                     {(() => {
                                         let images = [];
                                         if (selectedRMA.evidence_images) {
-                                            try {
-                                                images = JSON.parse(selectedRMA.evidence_images);
-                                            } catch (e) {
-                                                console.error("Error parsing evidence_images", e);
+                                            if (Array.isArray(selectedRMA.evidence_images)) {
+                                                images = selectedRMA.evidence_images;
+                                            } else if (typeof selectedRMA.evidence_images === 'string') {
+                                                try {
+                                                    images = JSON.parse(selectedRMA.evidence_images);
+                                                } catch (e) {
+                                                    console.error("Error parsing evidence_images", e);
+                                                }
                                             }
                                         }
                                         if (!images || images.length === 0) {

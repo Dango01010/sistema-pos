@@ -15,7 +15,7 @@ const PaymentModal = ({ isOpen, onClose, total, currency, onConfirm, isProcessin
     useEffect(() => {
         if (isOpen) {
             setMethod('cash');
-            setAmountReceived(total ? total.toString() : '');
+            setAmountReceived(total ? Number(total).toFixed(2) : '');
             setChange(0);
         }
     }, [isOpen, total]);

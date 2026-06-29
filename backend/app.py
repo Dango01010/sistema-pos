@@ -735,7 +735,7 @@ def get_returns():
     conn = get_db_connection()
     try:
         vendor = request.args.get('vendor', 'All')
-        
+        query = '''
             SELECT r.id, r.reason, r.total_refunded as total, r.status, r.created_at as date,
                    r.description, r.evidence_images,
                    COALESCE(c.name, 'Cliente General') as client, s.payment_method as invoice,
